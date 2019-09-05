@@ -1,0 +1,34 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+
+
+body {
+  background-image: url('assets/img/back.png');
+  background-size: auto;
+  background-repeat: repeat-y;
+  color: #242e42;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

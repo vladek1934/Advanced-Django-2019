@@ -1,0 +1,10 @@
+<div class="base">
+  <h4>Совпадения</h4>
+  <div class="list">
+    <ng-container *ngFor="let stat of stats;">
+      <div class="list-div">
+        <p style="margin-bottom: 1px">{{stat.user}}: {{stat.accuracy * 100}}% </p>
+      </div>
+    </ng-container>
+  </div>
+</div>

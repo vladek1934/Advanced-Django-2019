@@ -1,0 +1,21 @@
+<H4>Список картинок:</H4>
+<div class="list">
+  <ng-container *ngIf="images_empty==true" style="font-size:18px;">
+    <div style="position: center;margin:0 auto;"><span class="spinner-border spinner-border-sm"></span>
+      Loading images..
+    </div>
+  </ng-container>
+  <ng-container *ngFor="let image of images; let i = index">
+    <div class="list-div2" *ngIf="i==current_image" style="word-wrap: break-word;" (click)="changeImage(i)">
+      {{i + 1}}. {{image.name}}
+    </div>
+    <div class="list-div" *ngIf="i!=current_image && image.extra == false" style="word-wrap: break-word;"
+         (click)="changeImage(i)">
+      {{i + 1}}. {{image.name}}
+    </div>
+    <div class="list-div3" *ngIf="i!=current_image && image.extra == true" style="word-wrap: break-word;" (click)="changeImage(i)">
+      {{i + 1}}. {{image.name}}
+    </div>
+  </ng-container>
+</div>
+<!--<H5> Image count = {{images.length}} </H5>-->

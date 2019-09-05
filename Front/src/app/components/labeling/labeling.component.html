@@ -1,0 +1,94 @@
+<div id="infoDiv" class="bubble top" style="">
+  <form action="">
+    Enter object name:<br>
+    <!--    <input id="objectText" type="text" name="object" [(ngModel)]="polygonName">-->
+    <input id="objectText" type="text" list="labels" [(ngModel)]="polygonName" [ngModelOptions]="{standalone: true}">
+    <datalist id="labels">
+      <option *ngFor="let label of labels; let i = index;" value="{{label.name}}">
+    </datalist>
+    <br>
+    Enter attributes:<br>
+    <textarea id="attributesText" name="attributes" [(ngModel)]="polygonAttributes"></textarea>
+    <br><br>
+    <button type=button (click)="doneInfoDiv()">Done</button> &nbsp;
+    <button type=button (click)="undoInfoDiv()">Undo (close)</button> &nbsp;
+    <button type=button (click)="deleteInfoDiv()">Delete</button>
+  </form>
+</div>
+
+<div class="container" style="padding:0px">
+  <div class="d-flex justify-content-center mb-3">
+    <div class="column side">
+      <app-image-list [categoryId]="categoryId" (source)="changeImage($event)"></app-image-list>
+    </div>
+
+    <div class="column" [ngStyle]="{'min-width.px': originWidth+30}">
+      <div style="text-align: center">
+        <button class="btn btn-secondary buttonTool" style="background: rgb(67, 74, 85);" (click)="drawPolygon()">
+          <img src="../../../assets/polygon2.png" title="Draw polygon" alt="Draw polygon">
+          <span></span>
+        </button>
+        <button class="btn btn-secondary buttonTool" (click)="undoPolygon()">
+          <img src="../../../assets/undo.png" title="Undo" alt="Undo">
+          <!--          Undo-->
+        </button>
+        <button class="btn btn-secondary buttonTool" (click)="zoomIn()">
+          <img src="../../../assets/zoomin.png"
+               title="Zoom +" alt="Zoom +">
+          <!--          Zoom +-->
+        </button>
+        <button class="btn btn-secondary buttonTool" (click)="zoomOut()">
+          <img src="../../../assets/zoomout.png"
+               title="Zoom -" alt="Zoom -">
+          <!--          Zoom - -->
+        </button>
+        <button class="btn btn-secondary buttonTool" (click)="resetZoom()">
+          <img src="../../../assets/zoomreset.png"
+               title="Reset Zoom" alt="Reset Zoom">
+          <!--          Reset Zoom-->
+        </button>
+
+        <button class="btn btn-secondary buttonTool" (click)="mContrast()"><img
+          src="../../../assets/lesscontrast.png" title="- contrast" alt="- contrast">
+          <!--          - contrast-->
+        </button>
+        <button class="btn btn-secondary buttonTool" (click)="pContrast()"><img
+          src="../../../assets/morecontrast.png" title="+ contrast" alt="+ contrast">
+          <!--          + contrast-->
+        </button>
+        <button class="btn btn-secondary buttonTool" (click)="resetContrast()"><img
+          src="../../../assets/resetcontrast.png" title="Reset contrast" alt="Reset contrast">
+          <!--          Reset contrast-->
+        </button>
+
+      </div>
+      <div class="wrapperBlock" [ngStyle]="{'min-height.px': originHeight}" style="margin-top: 5px;">
+        <div id="canvas-block" class="canvas-block">
+          <canvas id="canvasImage" [ngClass]="{'drawing': drawing}"></canvas>
+
+          <canvas id="canvasMain" [ngClass]="{'drawing': drawing}"
+                  (click)="canvasClick($event)"></canvas>
+
+        </div>
+      </div>
+      <div class="comments">
+        <app-comment [imageId]="imageId"></app-comment>
+      </div>
+    </div>
+
+
+    <div>
+      <div class="column side">
+        <app-polygon-list [polygons]="this.newPolygons.polygons"
+                          (highlight)="refillPolygon($event, 'rgba(255,0,0,0.5)', 'rgba(0,255,0,0.5)')"
+                          (deHighlight)="fillPolygon('rgba(255,0,0,0.5)')"
+                          (delete)="deletePolygon($event)"></app-polygon-list>
+      </div>
+      <!--      <div class="column small">-->
+      <!--        <app-analytics [stats]="this.stats"></app-analytics>-->
+      <!--      </div>-->
+    </div>
+  </div>
+</div>
+
+

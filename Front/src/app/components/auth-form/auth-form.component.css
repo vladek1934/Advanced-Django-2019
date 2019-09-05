@@ -1,0 +1,89 @@
+@import url("https://use.fontawesome.com/releases/v5.3.1/css/all.css");
+
+#authformlogin {
+  margin-top: 30vh
+}
+
+.container {
+  height: 100%;
+  align-content: center;
+}
+
+.card {
+  /*height: 270px;*/
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 400px;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.card-header {
+  padding: 0;
+  /*overflow: hidden;*/
+}
+
+.card-header h3 {
+  color: white;
+}
+
+.input-group-prepend span {
+  width: 50px;
+  background-color: #a3e3e6;
+  color: black;
+  border: 0 !important;
+}
+
+input:focus {
+  outline: 0 !important;
+  box-shadow: 0 0 0 0 !important;
+}
+
+.login_btn {
+  color: black;
+  background-color: #a3e3e6;
+  width: 100px;
+}
+
+.reg_btn {
+  color: black;
+  background-color: #a3e3e6;
+  width: 150px;
+}
+
+.login_btn:hover {
+  color: black;
+  background-color: white;
+}
+
+.mode {
+  margin: 0;
+  padding: 10px;
+}
+
+.inactive {
+  background-color: rgba(0, 0, 0, 0.4);
+  box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.5);
+  transition: 0.1s;
+}
+
+.inactive h3 {
+  color: gray;
+}
+
+.inactive:hover {
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.inactive:hover h3 {
+  color: white;
+}
+
+
+.active {
+  background-color: transparent;
+}
+
+.active h3 {
+  color: white;
+}

@@ -1,0 +1,9 @@
+.categories {
+  min-width: 60%;
+  min-height: 85vh;
+  max-height: 85vh;
+  overflow: auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}

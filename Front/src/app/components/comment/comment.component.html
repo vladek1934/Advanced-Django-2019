@@ -1,0 +1,20 @@
+<div class="no-style" style="margin-left: 4px">
+  <div class="container" *ngIf="change == false">
+    <h3>Комментарий:</h3>
+    <div style="background: #eee; padding: 15px; margin: 10px;max-width: 800px;word-wrap: break-word;">
+      <p>{{comment}}</p>
+    </div>
+    <button *ngIf="commentId == 0" class="btn btn-success" (click)="change = true">Добавить</button>
+    <button *ngIf="commentId != 0" class="btn btn-success" (click)="change = true">Изменить</button>
+    <button *ngIf="commentId != 0" class="btn btn-outline-danger" (click)="deleteComment()">Удалить</button>
+  </div>
+  <div class="container" *ngIf="change == true">
+    <div class="form-group">
+      <h3>Комментарий:</h3>
+      <textarea rows="7" cols="100" class="form-control" id="Comment" [(ngModel)]="inputComment"></textarea>
+    </div>
+    <button *ngIf="commentId != 0" class="btn btn-success" (click)="sendComment()">Изменить</button>
+    <button *ngIf="commentId == 0" class="btn btn-success" (click)="sendComment()">Добавить</button>
+    <button class="btn btn-success" (click)="change = false">Отмена</button>
+  </div>
+</div>

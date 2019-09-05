@@ -1,0 +1,15 @@
+<div class="base">
+  <H4>Список полигонов:</H4>
+  <div class="list">
+    <ng-container *ngFor="let polygon of polygons; let i = index">
+      <div class="list-div" id="polygon{{i}}" style="word-wrap: break-word;" (mouseover)="highlighter(i)" (mouseleave)="deHighlighter()">
+        <div class="d-flex justify-content-between">
+          <div style="word-wrap: break-word;">{{i + 1}}. {{polygon.name}}</div>
+          <button class="btn btn-danger delete-poly" (click)="deleter(i)">
+            <img src="../../../assets/delete.png" title="Delete polygon" alt="Delete">
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

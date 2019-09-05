@@ -1,0 +1,74 @@
+<div class="container" id="authformlogin">
+  <div class="d-flex justify-content-center h-100">
+    <div class="card">
+      <div class="card-header">
+        <div class="row" style="max-width: 100%; margin:0;">
+          <div id="auth" class="col mode active" (click)="setActive('auth', 'reg')">
+            <h3>Вход</h3>
+          </div>
+          <div id="reg" class="col mode inactive" (click)="setActive('reg', 'auth')">
+            <h3>Регистрация</h3>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card-body" *ngIf="reg != true">
+        <div class="input-group form-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-user"></i></span>
+          </div>
+          <input id="input1" type="text" class="form-control" [(ngModel)]="username" placeholder="Логин"
+                 (keydown)="keyDownFunction($event)">
+        </div>
+        <div class="input-group form-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-key"></i></span>
+          </div>
+          <input id="input2" type="password" class="form-control" [(ngModel)]="password" placeholder="Пароль"
+                 (keydown)="keyDownFunction($event)">
+        </div>
+        <div class="form-group">
+          <button id="submit" class="btn float-right login_btn" (click)="auth()">Войти</button>
+        </div>
+        <div *ngIf="error == true" class="text-warning">Invalid credentials. Try again.</div>
+      </div>
+
+      <div class="card-body" *ngIf="reg == true">
+        <div class="input-group form-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-user"></i></span>
+          </div>
+          <input type="text" class="form-control" [(ngModel)]="regUsername" placeholder="Логин"
+                 (keydown)="keyDownFunction($event)">
+        </div>
+        <div class="input-group form-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+          </div>
+          <input type="email" class="form-control" [(ngModel)]="regEmail" placeholder="E-mail"
+                 (keydown)="keyDownFunction($event)">
+        </div>
+        <div class="input-group form-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-key"></i></span>
+          </div>
+          <input type="password" class="form-control" [(ngModel)]="regPassword1" placeholder="Пароль"
+                 (keydown)="keyDownFunction($event)">
+        </div>
+        <div class="input-group form-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-key"></i></span>
+          </div>
+          <input type="password" class="form-control" [(ngModel)]="regPassword2" placeholder="Повторите пароль"
+                 (keydown)="keyDownFunction($event)">
+        </div>
+        <div class="form-group">
+          <button class="btn float-right reg_btn" (click)="register()">Регистрация</button>
+        </div>
+        <div id="error" class="text-warning"></div>
+      </div>
+    </div>
+  </div>
+</div>
+

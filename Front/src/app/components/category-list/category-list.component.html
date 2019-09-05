@@ -1,0 +1,128 @@
+<div class="list col">
+  <H2 *ngIf="folderChosen == false" style="margin-top: 40px;">Категории:</H2>
+  <H2 *ngIf="folderChosen == true" style="margin-top: 40px;">Подкатегории {{current_folder.name}}:</H2>
+  <hr color="grey">
+  <div class="category-list">
+    <ng-container *ngIf="folderChosen == false">
+      <ng-container *ngIf="folders_empty==true">
+        <div class="list-div" style="text-align: center; ">
+          <div class="spinner-border spinner-border" style="margin:3px;"></div>
+          <span style="font-size: x-large; margin:0 auto " class="align-top">Loading folders...</span>
+        </div>
+      </ng-container>
+
+      <div id="accordion2">
+        <ng-container *ngFor="let folder of folders; let i = index">
+          <div class="card">
+            <div class="card-header">
+              <div class="row" style="margin:0">
+
+                <div class="category col-10" (click)="chooseFolder(i)">
+                  <h6>{{i + 1}}. {{folder.name}}</h6>
+                </div>
+
+                <a class="col button1 blue" style="" data-toggle="collapse"
+                   href="{{ '#folder-' + i }}">
+                  <h6>Описание</h6>
+                </a>
+              </div>
+            </div>
+
+            <div id="{{ 'folder-' + i }}" class="collapse" data-parent="#accordion2">
+              <div class="card-body">{{folder.description}}
+              </div>
+            </div>
+
+          </div>
+        </ng-container>
+      </div>
+
+    </ng-container>
+
+    <ng-container *ngIf="folderChosen == true">
+      <ng-container *ngIf="categories_empty==true">
+        <div class="list-div" style="text-align: center; ">
+          <div class="spinner-border spinner-border" style="margin:3px;"></div>
+          <span style="font-size: x-large; margin:0 auto " class="align-top">Loading categories...</span>
+
+        </div>
+      </ng-container>
+
+      <div id="accordion">
+        <ng-container *ngFor="let category of categories; let i = index">
+
+          <div class="card">
+            <div class="card-header">
+              <div class="row" style="margin:0">
+
+                <div class="category col-9" *ngIf="super == true" (click)="chooseCategory(i)">
+                  <h6>{{i + 1}}. {{category.name}}</h6>
+                </div>
+
+                <div class="category col-10" *ngIf="super != true" (click)="chooseCategory(i)">
+                  <h6>{{i + 1}}. {{category.name}}</h6>
+                </div>
+
+                <ng-container *ngIf="super == true">
+                  <div class="col button1 orange" (click)="getReport(i) "
+                       data-toggle="modal"
+                       data-target="#myModal">
+                    <h6>Статистика</h6>
+                  </div>
+                </ng-container>
+
+                <a class="col button1 blue" style="" data-toggle="collapse"
+                   href="{{ '#object-' + i }}">
+                  <h6>Описание</h6>
+                </a>
+              </div>
+            </div>
+
+            <div id="{{ 'object-' + i }}" class="collapse" data-parent="#accordion">
+              <div class="card-body">{{category.description}}
+              </div>
+            </div>
+
+          </div>
+
+        </ng-container>
+      </div>
+
+    </ng-container>
+
+
+    <div class="modal" id="myModal" *ngIf="super == true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Статистика</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body" style="height: 80vh">
+            <ng-container *ngIf="reported == true">
+              <!--              <iframe [src]='Url' width="100%" height="1000px"></iframe>-->
+              <object
+                [data]='Url'
+                type="application/pdf"
+                width="100%"
+                height="100%">
+                <p>Your browser does not support PDFs.
+                  <a [href]='Url'>Download the PDF</a>.</p>
+              </object>
+            </ng-container>
+            <ng-container *ngIf="reported==false">
+              Данный раздел не доступен.
+            </ng-container>
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
