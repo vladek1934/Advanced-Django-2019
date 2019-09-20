@@ -11,6 +11,8 @@ import {IFolder} from '../../models/models';
 })
 export class MainComponent implements OnInit {
 
+  date = new Date;
+
   private isLogged = false;
   categoryId: number;
   categoryChosen: boolean = false;
