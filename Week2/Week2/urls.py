@@ -20,17 +20,17 @@ from rest_framework_simplejwt import views as jwt_views
 from rest_framework.routers import DefaultRouter
 from rest_framework_jwt.views import obtain_jwt_token
 
-from base.views import UserViewSet
+from base.views import ProfileViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', obtain_jwt_token),
-    path('register/', views.RegisterUserAPIView.as_view()),
+    path('register/user/', views.RegisterUserAPIView.as_view()),
+    path('register/profile/', views.RegisterProfileAPIView.as_view()),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]
 router = DefaultRouter()
-router.register('users', UserViewSet, base_name='users')
-
+router.register('users', ProfileViewSet, base_name='users')
 
 urlpatterns += router.urls
