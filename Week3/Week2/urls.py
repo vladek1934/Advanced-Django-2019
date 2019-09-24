@@ -31,6 +31,6 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]
 router = DefaultRouter()
-router.register('users', ProfileViewSet, base_name='users')
+router.register('profiles', ProfileViewSet, base_name='profiles')
 
 urlpatterns += router.urls

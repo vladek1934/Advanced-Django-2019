@@ -1,4 +1,6 @@
+from django.core.files.storage import FileSystemStorage
 from django.db import models
+from Images import *
 from django.contrib.auth.models import User, AbstractUser, AbstractBaseUser, PermissionsMixin, BaseUserManager
 from base.ChoiceFields import STATUS_CHOICES
 from django.utils import timezone
@@ -8,10 +10,10 @@ from rest_framework.authtoken.models import Token
 # Create your models here.
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.CharField(max_length=500)
-    address = models.CharField(max_length=300)
-    web_site = models.CharField(max_length=300)
-    # avatar = models.FileField()
+    bio = models.CharField(max_length=500, default='none')
+    address = models.CharField(max_length=300, default='none')
+    web_site = models.CharField(max_length=300, default='none')
+    avatar = models.FileField(default='Images/Default.png')
 
     def __str__(self):
         return self.user.username
