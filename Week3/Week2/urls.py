@@ -28,7 +28,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', obtain_jwt_token),
     path('register/', views.RegisterUserAPIView.as_view()),
-    path('api/token/', obtain_jwt_token, name='api_token_auth')
+    path('api/token/', obtain_jwt_token, name='api_token_auth'),
+    path('blocks/', views.BlocktList.as_view()),
+    path('blocks/<int:pk>/', views.BlockDetail.as_view()),
     # path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]
@@ -36,7 +38,7 @@ router = DefaultRouter()
 router.register('profiles', ProfileViewSet, base_name='profiles')
 router.register('projects', ProjectViewSet, base_name='projects')
 router.register('members', ProjectMemberViewSet, base_name='members')
-router.register('blocks', BlockViewSet, base_name='blocks')
+# router.register('blocks', BlockViewSet, base_name='blocks')
 router.register('tasks', TaskViewSet, base_name='tasks')
 router.register('documents', DocumentViewSet, base_name='documents')
 router.register('comments', CommentViewSet, base_name='comments')

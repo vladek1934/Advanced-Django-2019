@@ -32,7 +32,7 @@ class ProjectMember(models.Model):
 
 class Block(models.Model):
     name = models.CharField(max_length=300)
-    type = models.IntegerField(choices=STATUS_CHOICES)
+    type = models.IntegerField(choices=STATUS_CHOICES, default=4)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
 
