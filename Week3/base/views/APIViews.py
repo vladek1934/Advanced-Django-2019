@@ -19,9 +19,9 @@ class RegisterUserAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BlocktList(mixins.ListModelMixin,
-                 mixins.CreateModelMixin,
-                 generics.GenericAPIView):
+class BlockList(mixins.ListModelMixin,
+                mixins.CreateModelMixin,
+                generics.GenericAPIView):
     queryset = Block.objects.all()
     serializer_class = BlockSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)

@@ -53,7 +53,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     # creator_id = serializers.HiddenField(default=serializers.CurrentUserDefault())
     # creator = serializers.CharField(source='creator.username', read_only=True)
 
-    creator= serializers.PrimaryKeyRelatedField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Project
@@ -84,6 +84,7 @@ class BlockSerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
 
     # block = serializers.PrimaryKeyRelatedField(required=True, queryset=Block.objects.all())
     # creator = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
@@ -109,6 +110,7 @@ class DocumentSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     created_at = serializers.DateTimeField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
 
     # block = serializers.PrimaryKeyRelatedField(required=True, queryset=Block.objects.all())
     # creator = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())

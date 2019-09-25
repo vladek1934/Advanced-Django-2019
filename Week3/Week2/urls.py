@@ -29,7 +29,7 @@ urlpatterns = [
     path('login/', obtain_jwt_token),
     path('register/', views.RegisterUserAPIView.as_view()),
     path('api/token/', obtain_jwt_token, name='api_token_auth'),
-    path('blocks/', views.BlocktList.as_view()),
+    path('blocks/', views.BlockList.as_view()),
     path('blocks/<int:pk>/', views.BlockDetail.as_view()),
     # path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
