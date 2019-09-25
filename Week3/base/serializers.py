@@ -2,21 +2,6 @@ from rest_framework import serializers
 from base.models import *
 
 
-# make profile creation via signal
-class ProfileSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-
-    # user = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
-
-    class Meta:
-        model = Profile
-        fields = ('id', 'user', 'bio', 'address', 'web_site', 'avatar')
-
-    def create(self, validated_data):
-        profile = Profile.objects.create(**validated_data)
-        return profile
-
-
 class UserSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
 
@@ -34,15 +19,45 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
 
+        profile = Profile.objects.create(
+            user=user
+        )
+        profile.save()
         return user
+
+
+# In future make profile creation via signal
+class ProfileSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    origin = serializers.SerializerMethodField()
+
+    # user = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
+
+    class Meta:
+        model = Profile
+        fields = ('id', 'origin', 'bio', 'address', 'web_site', 'avatar')
+
+    def create(self, validated_data):
+        profile = Profile.objects.create(**validated_data)
+        return profile
+
+    def get_origin(self, obj):
+        if obj.user is not None:
+            return obj.user.username + " with id " + str(obj.user.id)
+        return ''
 
 
 class ProjectSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, allow_blank=False)
+    # creator_id = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    # creator = serializers.CharField(source='creator.username', read_only=True)
+
+    creator= serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Project
+        # fields = ('id', 'name', 'creator_id', 'description', 'creator')
         fields = '__all__'
 
 
@@ -53,7 +68,7 @@ class ProjectMemberSerializer(serializers.ModelSerializer):
     # project = serializers.PrimaryKeyRelatedField(required=True, queryset=Project.objects.all())
 
     class Meta:
-        model = Project_member
+        model = ProjectMember
         fields = '__all__'
 
 
@@ -78,14 +93,27 @@ class TaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = '__all__'
 
-# class Task_document(models.Model):
-#     document = models.FileField()
-#     creator = models.ForeignKey(User, on_delete=models.CASCADE)
-#     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-#
-#
-# class Task_comment(models.Model):
-#     body = models.TextField()
-#     creator = models.ForeignKey(User, on_delete=models.CASCADE)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     task = models.ForeignKey(Task, on_delete=models.CASCADE)
+
+class DocumentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
+    # block = serializers.PrimaryKeyRelatedField(required=True, queryset=Block.objects.all())
+    # creator = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
+    # executor = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
+
+    class Meta:
+        model = TaskDocument
+        fields = '__all__'
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
+
+    # block = serializers.PrimaryKeyRelatedField(required=True, queryset=Block.objects.all())
+    # creator = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
+    # executor = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
+
+    class Meta:
+        model = TaskComment
+        fields = '__all__'

@@ -21,10 +21,11 @@ class Profile(models.Model):
 
 class Project(models.Model):
     name = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(default="No description? You can add one!")
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="createdprojects")
 
 
-class Project_member(models.Model):
+class ProjectMember(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
@@ -44,13 +45,13 @@ class Task(models.Model):
     order = models.IntegerField()
 
 
-class Task_document(models.Model):
+class TaskDocument(models.Model):
     document = models.FileField()
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
 
 
-class Task_comment(models.Model):
+class TaskComment(models.Model):
     body = models.TextField()
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
