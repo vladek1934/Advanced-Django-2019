@@ -15,6 +15,7 @@ import { ImageListComponent } from './components/image-list/image-list.component
 import { CategoryListComponent } from './components/category-list/category-list.component';
 import { CommentComponent } from './components/comment/comment.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
+import { ModuleComponent } from './module/module.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AnalyticsComponent } from './components/analytics/analytics.component';
     ImageListComponent,
     CategoryListComponent,
     CommentComponent,
-    AnalyticsComponent
+    AnalyticsComponent,
+    ModuleComponent
   ],
   imports: [
     BrowserModule,

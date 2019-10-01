@@ -6,12 +6,12 @@ class UserSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
 
     class Meta:
-        model = User
+        model = MainUser
         fields = ('id', 'username', 'password', 'email',)
         write_only_fields = ('password',)
 
     def create(self, validated_data):
-        user = User.objects.create(
+        user = MainUser.objects.create(
             username=validated_data['username'],
             email=validated_data['email'],
         )
