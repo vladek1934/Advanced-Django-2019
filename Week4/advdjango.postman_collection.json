@@ -6,326 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "BLocks",
-			"item": [
-				{
-					"name": "Block Delete",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "JWT {{token}}"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/blocks/2/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"blocks",
-								"2",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Block Listing",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "JWT {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/blocks/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"blocks",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Block Create",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "JWT {{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "New One",
-									"type": "text"
-								},
-								{
-									"key": "type",
-									"value": "1",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "project",
-									"value": "2",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/blocks/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"blocks",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Block Update",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "JWT {{token}}"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "changed",
-									"type": "text"
-								},
-								{
-									"key": "project",
-									"value": "2",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/blocks/3/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"blocks",
-								"3",
-								""
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "Tasks",
-			"item": [
-				{
-					"name": "Delete",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "JWT {{token}}"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/blocks/2/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"blocks",
-								"2",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "List",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "JWT {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://127.0.0.1:8000/blocks/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"blocks",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "JWT {{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "New One",
-									"type": "text"
-								},
-								{
-									"key": "type",
-									"value": "1",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "project",
-									"value": "2",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/blocks/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"blocks",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"type": "text",
-								"value": "JWT {{token}}"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "changed",
-									"type": "text"
-								},
-								{
-									"key": "project",
-									"value": "2",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://127.0.0.1:8000/blocks/3/",
-							"protocol": "http",
-							"host": [
-								"127",
-								"0",
-								"0",
-								"1"
-							],
-							"port": "8000",
-							"path": [
-								"blocks",
-								"3",
-								""
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
 			"name": "Users / profiles",
 			"item": [
 				{
@@ -351,12 +31,12 @@
 							"formdata": [
 								{
 									"key": "username",
-									"value": "user2",
+									"value": "admin",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "asdasd23",
+									"value": "asdasdasd",
 									"type": "text"
 								}
 							]
@@ -572,7 +252,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://127.0.0.1:8000/projects/1/",
+							"raw": "http://127.0.0.1:8000/projects/2/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -583,7 +263,7 @@
 							"port": "8000",
 							"path": [
 								"projects",
-								"1",
+								"2",
 								""
 							]
 						}
@@ -617,7 +297,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/projects/13/",
+							"raw": "http://127.0.0.1:8000/projects/2/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -628,7 +308,350 @@
 							"port": "8000",
 							"path": [
 								"projects",
-								"13",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "BLocks",
+			"item": [
+				{
+					"name": "Block Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "JWT {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/blocks/2/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"blocks",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Block Listing",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "JWT {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/blocks/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"blocks",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Block Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "JWT {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "New One",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "project",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/blocks/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"blocks",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Block Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "JWT {{token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "changed",
+									"type": "text"
+								},
+								{
+									"key": "project",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/blocks/3/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"blocks",
+								"3",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "JWT {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/tasks/2/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"tasks",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "JWT {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/tasks/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"tasks",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "JWT {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "New One",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "New",
+									"type": "text"
+								},
+								{
+									"key": "order",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "executor",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "block",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/tasks/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"tasks",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "JWT {{token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "changed",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "changed",
+									"type": "text"
+								},
+								{
+									"key": "order",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "executor",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "block",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/tasks/2/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"tasks",
+								"2",
 								""
 							]
 						}

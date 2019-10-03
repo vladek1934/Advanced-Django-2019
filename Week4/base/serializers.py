@@ -11,13 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
         write_only_fields = ('password',)
 
     def create(self, validated_data):
-        user = MainUser.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-        )
-
-        user.set_password(validated_data['password'])
-        user.save()
+        user = MainUser.objects.create_user(**validated_data)
 
         profile = Profile.objects.create(
             user=user
