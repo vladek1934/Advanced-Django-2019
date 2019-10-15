@@ -54,6 +54,40 @@ class ProjectSerializer(serializers.ModelSerializer):
         # fields = ('id', 'name', 'creator_id', 'description', 'creator')
         fields = '__all__'
 
+    def get_creator_name(self, obj):
+        if obj.creator is not None:
+            return obj.creator.username
+        return ''
+
+
+# class ProjectSerializer(serializers.Serializer):
+#     id = serializers.IntegerField(read_only=True)
+#     name = serializers.CharField(max_length=300)
+#     description = serializers.CharField(max_length=300)
+#
+#     def create(self, validated_data):
+#         project = Project.objects.create(**validated_data)
+#         return project
+#
+#     def update(self, instance, validated_data):
+#         instance.name = validated_data.get('name', instance.name)
+#         instance.description = validated_data.get('status', instance.description)
+#         instance.save()
+#
+#         return instance
+#
+#     # def validate(self, attrs):
+#     #     pass
+#
+#     def validate_name(self, value):
+#         if len(value) >= 100:
+#             raise serializers.ValidationError('Name field must be max len: 100')
+#         return value
+#     def get_creator_name(self, obj):
+#         if obj.creator is not None:
+#             return obj.creator.username
+#         return ''
+
 
 class ProjectMemberSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
@@ -76,9 +110,9 @@ class BlockSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TaskSerializer(serializers.ModelSerializer):
+class TaskShortSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     # block = serializers.PrimaryKeyRelatedField(required=True, queryset=Block.objects.all())
     # creator = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
@@ -86,7 +120,12 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = '__all__'
+        fields = ('id', 'name', 'executor', 'creator', 'block')
+
+
+class TaskFullSerializer(TaskShortSerializer):
+    class Meta(TaskShortSerializer.Meta):
+        fields = TaskShortSerializer.Meta.fields + ('order', 'description',)
 
 
 class DocumentSerializer(serializers.ModelSerializer):
