@@ -23,19 +23,13 @@ class UserSerializer(serializers.ModelSerializer):
 # In future make profile creation via signal
 class ProfileSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    origin = serializers.SerializerMethodField()
-
-    # user = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
+    parent_user = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ('id', 'origin', 'bio', 'address', 'web_site', 'avatar')
+        fields = ('id', 'parent_user', 'bio', 'address', 'web_site', 'avatar')
 
-    def create(self, validated_data):
-        profile = Profile.objects.create(**validated_data)
-        return profile
-
-    def get_origin(self, obj):
+    def get_parent_user(self, obj):
         if obj.user is not None:
             return obj.user.username + " with id " + str(obj.user.id)
         return ''
@@ -44,10 +38,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, allow_blank=False)
-    # creator_id = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    # creator = serializers.CharField(source='creator.username', read_only=True)
-
-    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Project
@@ -60,46 +51,13 @@ class ProjectSerializer(serializers.ModelSerializer):
         return ''
 
     def validate_name(self, value):
-        if len(value) >= 100:
-            raise serializers.ValidationError('Name field must be max len: 100')
+        if (len(value) >= 200 or len(value) <= 0):
+            raise serializers.ValidationError('Name field must be in range 0-200 symbols')
         return value
-
-
-# class ProjectSerializer(serializers.Serializer):
-#     id = serializers.IntegerField(read_only=True)
-#     name = serializers.CharField(max_length=300)
-#     description = serializers.CharField(max_length=300)
-#
-#     def create(self, validated_data):
-#         project = Project.objects.create(**validated_data)
-#         return project
-#
-#     def update(self, instance, validated_data):
-#         instance.name = validated_data.get('name', instance.name)
-#         instance.description = validated_data.get('status', instance.description)
-#         instance.save()
-#
-#         return instance
-#
-#     # def validate(self, attrs):
-#     #     pass
-#
-#     def validate_name(self, value):
-#         if len(value) >= 100:
-#             raise serializers.ValidationError('Name field must be max len: 100')
-#         return value
-#
-#     def get_creator_name(self, obj):
-#         if obj.creator is not None:
-#             return obj.creator.username
-#         return ''
 
 
 class ProjectMemberSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-
-    # user = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
-    # project = serializers.PrimaryKeyRelatedField(required=True, queryset=Project.objects.all())
 
     class Meta:
         model = ProjectMember
@@ -109,8 +67,6 @@ class ProjectMemberSerializer(serializers.ModelSerializer):
 class BlockSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
 
-    # project = serializers.PrimaryKeyRelatedField(required=True, queryset=Project.objects.all())
-
     class Meta:
         model = Block
         fields = '__all__'
@@ -118,34 +74,27 @@ class BlockSerializer(serializers.ModelSerializer):
 
 class TaskShortSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
-    # block = serializers.PrimaryKeyRelatedField(required=True, queryset=Block.objects.all())
-    # creator = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
-    # executor = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
 
     class Meta:
         model = Task
         fields = ('id', 'name', 'executor', 'creator', 'block')
 
     def validate_order(self, value):
-        if int(value) >= 100 or int(value) <= 20:
-            raise serializers.ValidationError('Order field must be in range 20-100')
+        if int(value) > 100 or int(value) < 1:
+            raise serializers.ValidationError('Order field must be in range 1-100')
         return value
 
 
-
 class TaskFullSerializer(TaskShortSerializer):
+    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta(TaskShortSerializer.Meta):
         fields = TaskShortSerializer.Meta.fields + ('order', 'description',)
 
 
 class DocumentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-
-    # block = serializers.PrimaryKeyRelatedField(required=True, queryset=Block.objects.all())
-    # creator = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
-    # executor = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
+    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = TaskDocument
@@ -155,11 +104,7 @@ class DocumentSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     created_at = serializers.DateTimeField(read_only=True)
-    creator = serializers.PrimaryKeyRelatedField(read_only=True)
-
-    # block = serializers.PrimaryKeyRelatedField(required=True, queryset=Block.objects.all())
-    # creator = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
-    # executor = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.all())
+    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = TaskComment

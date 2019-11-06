@@ -3,6 +3,7 @@ from Images import *
 from django.contrib.auth.models import User, AbstractUser, AbstractBaseUser, PermissionsMixin
 from base.utils.ChoiceFields import *
 from rest_framework.authtoken.models import Token
+from base.utils.document_upload import task_document_path, validate_file_size, validate_extension
 
 
 class MainUser(AbstractUser):
@@ -59,6 +60,9 @@ class ProjectMember(models.Model):
     user = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="projects")
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="members")
 
+    class Meta:
+        unique_together = ('user', 'project',)
+
 
 class BlockManager(models.Manager):
     def todo_tasks(self):
@@ -109,7 +113,7 @@ class Task(models.Model):
 
 
 class TaskDocument(models.Model):
-    document = models.FileField()
+    document = models.FileField(upload_to=task_document_path, validators=[validate_file_size, validate_extension])
     creator = models.ForeignKey(MainUser, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="documents")
 
