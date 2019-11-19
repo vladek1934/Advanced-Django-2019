@@ -1,17 +1,27 @@
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_delete, post_save, pre_delete
 from django.dispatch import receiver
 from base.utils.ChoiceFields import *
-from base.models import Task, MainUser, Profile, Project, Block
+from base.models import Task, MainUser, Profile, Project, Block, TaskDocument
 from base.utils.document_upload import task_delete_path
 
 
-@receiver(post_delete, sender=Task)
-def task_deleted(sender, instance, **kwargs):
-    print('started deleting docs')
-    if instance.documents.count() > 0:
-        for i in instance.documents:
-            task_delete_path(document=i)
-            print('deleted' + i)
+# @receiver(pre_delete, sender=Task)
+# def task_deleted(sender, instance, **kwargs):
+#     print('started deleting docs')
+#     print(instance.documents)
+#     print(instance.documents.count())
+#     if instance.documents.count() > 0:
+#         print('started deleting many docs')
+#         for i in instance.documents:
+#             task_delete_path(document=i)
+#             print('deleted' + i)
+
+@receiver(post_delete, sender=TaskDocument)
+def document_deleted(sender, instance, **kwargs):
+    print('started deleting doc')
+    if instance:
+        task_delete_path(document=instance)
+        print('deleted')
 
 
 @receiver(post_save, sender=MainUser)
