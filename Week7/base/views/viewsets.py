@@ -35,11 +35,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
         else:
             return Project.objects.all()
 
-    def perform_create(self, serializer):
-        serializer.save()
-        actions_logger.info(
-            f"{self.request.user} created project {serializer.data.get('id'), serializer.data.get('name')}!\n")
-        # serializer.save(creator=self.request.user)
+    # def perform_create(self, serializer):
+    #     serializer.save()
+    # actions_logger.info(
+    #     f"{self.request.user} created project {serializer.data.get('id'), serializer.data.get('name')}!\n")
+    # serializer.save(creator=self.request.user)
 
     def perform_destroy(self, instance):
         actions_logger.warning(f"{instance.creator} deleted project {instance.id, instance.name}!\n")
@@ -68,7 +68,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     @action(methods=['GET'], detail=True)
     def members(self, request, pk):
         instance = self.get_object()
-        serializer = ProjectMemberSerializer(instance.members, many=True)
+        serializer = ProjectMemberSerializer(instance.participants, many=True)
         return Response(serializer.data)
 
 
@@ -98,6 +98,12 @@ class BlockViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         print(self.request.user)
         return Block.objects.all()
+
+    @action(methods=['GET'], detail=True)
+    def not_empty(self):
+        blocks = Block.status_sort.not_empty()
+        serializer = BlockSerializer(blocks, many=True)
+        return Response(serializer.data)
 
 
 class TaskViewSet(viewsets.ModelViewSet):

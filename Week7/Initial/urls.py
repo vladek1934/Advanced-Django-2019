@@ -13,15 +13,29 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import debug_toolbar
+from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import permissions
 from base import views
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 from django.conf import settings
 from rest_framework.routers import DefaultRouter
 from rest_framework_jwt.views import obtain_jwt_token
 from django.conf.urls.static import static
 from base.views import *
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Jira API",
+        default_version='v1',
+        description="Test description"
+    ),
+    public=True,
+    permission_classes=(permissions.IsAdminUser,)
+)
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('login/', obtain_jwt_token),
@@ -29,6 +43,7 @@ urlpatterns = [
                   path('api/token/', obtain_jwt_token, name='api_token_auth'),
                   # path('blocks/', views.BlockList.as_view()),
                   # path('blocks/<int:pk>/', views.BlockDetail.as_view()),
+                  url(r'^help/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 router = DefaultRouter()

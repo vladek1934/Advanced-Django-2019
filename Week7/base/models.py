@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from Images import *
 from django.contrib.auth.models import User, AbstractUser, AbstractBaseUser, PermissionsMixin
 from base.utils.ChoiceFields import *
@@ -7,6 +8,8 @@ from base.utils.document_upload import task_document_path, validate_file_size, v
 
 
 class MainUser(AbstractUser):
+    projects = models.ManyToManyField('Project', through='ProjectMember', related_name='participants')
+
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
@@ -27,13 +30,16 @@ class MainUser(AbstractUser):
         return f'{self.id}: {self.username}'
 
 
-# Create your models here.
 class Profile(models.Model):
     user = models.OneToOneField(MainUser, on_delete=models.CASCADE)
     bio = models.CharField(max_length=500, default='none')
     address = models.CharField(max_length=300, default='none')
     web_site = models.CharField(max_length=300, default='none')
     avatar = models.FileField(default='Images/Default.png')
+
+    class Meta:
+        verbose_name = 'Profile'
+        verbose_name_plural = 'Profiles'
 
     def __str__(self):
         return self.user.username
@@ -42,7 +48,7 @@ class Profile(models.Model):
 class Project(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(default="No description? You can add one!")
-    creator = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="createdprojects")
+    creator = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="created_projects")
 
     @property
     def block_count(self):
@@ -50,15 +56,15 @@ class Project(models.Model):
 
     @property
     def members_count(self):
-        return self.members.count()
+        return self.participants.count()
 
     def __str__(self):
         return self.name
 
 
 class ProjectMember(models.Model):
-    user = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="projects")
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="members")
+    user = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="membership")
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="membership")
 
     class Meta:
         unique_together = ('user', 'project',)
@@ -79,6 +85,9 @@ class BlockManager(models.Manager):
 
     def filter_by_status(self, status):
         return self.filter(type=status)
+
+    def not_empty(self):
+        return self.objects.exclude(Q(tasks_count__lte=0))
 
 
 class Block(models.Model):
@@ -102,30 +111,38 @@ class Task(models.Model):
     creator = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="created_tasks")
     executor = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="assigned_tasks")
     block = models.ForeignKey(Block, on_delete=models.CASCADE, related_name="tasks")
-    order = models.IntegerField()
+    priority = models.IntegerField()
 
     @property
     def documents_count(self):
         return self.documents.count()
 
     def __str__(self):
-        return self.name + " With priority of " + str(self.order)
+        return self.name + " With priority of " + str(self.priority)
 
 
-class TaskDocument(models.Model):
-    document = models.FileField(upload_to=task_document_path, validators=[validate_file_size, validate_extension])
+class TaskSubmition(models.Model):
     creator = models.ForeignKey(MainUser, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return f'{self.creator}: {self.created_at}'
+
+
+class TaskDocument(TaskSubmition):
+    document = models.FileField(upload_to=task_document_path, validators=[validate_file_size, validate_extension])
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="documents")
 
     def __str__(self):
         return self.document.name + " added by " + str(self.creator.full_name)
 
 
-class TaskComment(models.Model):
+class TaskComment(TaskSubmition):
     body = models.TextField()
-    creator = models.ForeignKey(MainUser, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="comments")
 
     def __str__(self):
         return self.creator.full_name + " posted at  " + str(self.created_at)

@@ -9,30 +9,19 @@ class UserSerializer(serializers.ModelSerializer):
         model = MainUser
         fields = ('id', 'username', 'password', 'email',)
         write_only_fields = ('password',)
+        read_only_fields = ('projects',)
 
     def create(self, validated_data):
         user = MainUser.objects.create_user(**validated_data)
-
-        # profile = Profile.objects.create(
-        #     user=user
-        # )
-        # profile.save()
         return user
 
 
-# In future make profile creation via signal
 class ProfileSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    parent_user = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ('id', 'parent_user', 'bio', 'address', 'web_site', 'avatar')
-
-    def get_parent_user(self, obj):
-        if obj.user is not None:
-            return obj.user.username + " with id " + str(obj.user.id)
-        return ''
+        fields = ('id', 'user', 'bio', 'address', 'web_site', 'avatar')
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -79,7 +68,7 @@ class TaskShortSerializer(serializers.ModelSerializer):
         model = Task
         fields = ('id', 'name', 'executor', 'creator', 'block')
 
-    def validate_order(self, value):
+    def validate_priority(self, value):
         if int(value) > 100 or int(value) < 1:
             raise serializers.ValidationError('Order field must be in range 1-100')
         return value
@@ -89,7 +78,7 @@ class TaskFullSerializer(TaskShortSerializer):
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta(TaskShortSerializer.Meta):
-        fields = TaskShortSerializer.Meta.fields + ('order', 'description',)
+        fields = TaskShortSerializer.Meta.fields + ('priority', 'description',)
 
 
 class DocumentSerializer(serializers.ModelSerializer):

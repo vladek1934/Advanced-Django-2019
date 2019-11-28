@@ -38,7 +38,7 @@ class BlockAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'creator', 'order')
+    list_display = ('id', 'name', 'creator', 'priority')
 
 
 @admin.register(TaskDocument)

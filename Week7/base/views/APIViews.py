@@ -17,7 +17,6 @@ class RegisterUserAPIView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            user_logger.info(f"{request.data.get('username')} registered!\n")
             return Response(serializer.data)
         user_logger.warning(f"{request.data.get('username')} tried to register but could not!\n")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
