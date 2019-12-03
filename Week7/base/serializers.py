@@ -31,7 +31,6 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        # fields = ('id', 'name', 'creator_id', 'description', 'creator')
         fields = '__all__'
 
     def get_creator_name(self, obj):
@@ -61,6 +60,31 @@ class BlockSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# class TaskShortSerializer(serializers.Serializer):
+#     id = serializers.IntegerField(read_only=True)
+#     name = serializers.CharField()
+#     status = serializers.IntegerField()
+#     project_id = serializers.IntegerField()
+#     executor = UserSerializer(read_only=True)
+#     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+#
+#     def validate_priority(self, value):
+#         if int(value) > 100 or int(value) < 1:
+#             raise serializers.ValidationError('Priority field must be in range 1-100')
+#         return value
+#
+#     def create(self, validated_data):
+#         task = Task.objects.create(**validated_data)
+#         return task
+#
+#     def update(self, instance, validated_data):
+#         instance.name = validated_data.get('name', instance.name)
+#         instance.status = validated_data.get('status', instance.name)
+#         instance.project_id = validated_data.get('project_id', instance.name)
+#         instance.save()
+#         return instance
+
+
 class TaskShortSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
 
@@ -70,7 +94,7 @@ class TaskShortSerializer(serializers.ModelSerializer):
 
     def validate_priority(self, value):
         if int(value) > 100 or int(value) < 1:
-            raise serializers.ValidationError('Order field must be in range 1-100')
+            raise serializers.ValidationError('Priority field must be in range 1-100')
         return value
 
 

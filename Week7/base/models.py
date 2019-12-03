@@ -70,24 +70,23 @@ class ProjectMember(models.Model):
         unique_together = ('user', 'project',)
 
 
-class BlockManager(models.Manager):
+class BlockStatusManager(models.Manager):
     def todo_tasks(self):
-        return self.filter(type=STATUS_TODO)
+        return super().get_queryset().filter(type=STATUS_TODO)
 
     def in_progress_tasks(self):
-        return self.filter(type=STATUS_IN_PROGRESS)
+        return super().get_queryset().filter(type=STATUS_IN_PROGRESS)
 
     def done_tasks(self):
-        return self.filter(type=STATUS_DONE)
+        return super().get_queryset().filter(type=STATUS_DONE)
 
     def new_tasks(self):
-        return self.filter(type=STATUS_NEW)
+        return super().get_queryset().filter(type=STATUS_NEW)
 
-    def filter_by_status(self, status):
-        return self.filter(type=status)
 
+class BlockFilledManager(models.Manager):
     def not_empty(self):
-        return self.objects.exclude(Q(tasks_count__lte=0))
+        return super().get_queryset().exclude(Q(tasks_count__lte=0))
 
 
 class Block(models.Model):
@@ -95,7 +94,8 @@ class Block(models.Model):
     type = models.IntegerField(choices=STATUS_CHOICES, default=4)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="blocks")
     objects = models.Manager()
-    status_sort = BlockManager()
+    status_sort = BlockStatusManager()
+    not_empty = BlockFilledManager()
 
     @property
     def tasks_count(self):
@@ -105,6 +105,11 @@ class Block(models.Model):
         return self.name + " " + str(self.project)
 
 
+class TaskDispatchedManager(models.Manager):
+    def dispatched(self):
+        return super().get_queryset().exclude(Q(executors_count__lte=0))
+
+
 class Task(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
@@ -112,6 +117,7 @@ class Task(models.Model):
     executor = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="assigned_tasks")
     block = models.ForeignKey(Block, on_delete=models.CASCADE, related_name="tasks")
     priority = models.IntegerField()
+    dispatched = TaskDispatchedManager()
 
     @property
     def documents_count(self):
@@ -121,9 +127,18 @@ class Task(models.Model):
         return self.name + " With priority of " + str(self.priority)
 
 
+class DateManager(models.Manager):
+    def ordered(self):
+        return super().get_queryset().order_by('created_at')
+
+    def rev_ordered(self):
+        return super().get_queryset().order_by('-created_at')
+
+
 class TaskSubmition(models.Model):
-    creator = models.ForeignKey(MainUser, on_delete=models.CASCADE)
+    text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    timeOrder = DateManager()
 
     class Meta:
         abstract = True
@@ -135,13 +150,14 @@ class TaskSubmition(models.Model):
 class TaskDocument(TaskSubmition):
     document = models.FileField(upload_to=task_document_path, validators=[validate_file_size, validate_extension])
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="documents")
+    creator = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="documents")
 
     def __str__(self):
         return self.document.name + " added by " + str(self.creator.full_name)
 
 
 class TaskComment(TaskSubmition):
-    body = models.TextField()
+    creator = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="comments")
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="comments")
 
     def __str__(self):
