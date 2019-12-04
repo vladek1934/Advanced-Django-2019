@@ -1,4 +1,4 @@
-# DRF-based markup system
+# DRF-based jira system
 
 This software is provided as is, under a License of its creators.
 
