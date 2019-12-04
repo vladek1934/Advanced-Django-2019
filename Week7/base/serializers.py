@@ -24,6 +24,15 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'bio', 'address', 'web_site', 'avatar')
 
 
+class ProfileNestedSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = ('id', 'user', 'bio', 'address', 'web_site', 'avatar')
+
+
 class ProjectSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, allow_blank=False)
@@ -63,15 +72,10 @@ class BlockSerializer(serializers.ModelSerializer):
 # class TaskShortSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True)
 #     name = serializers.CharField()
-#     status = serializers.IntegerField()
-#     project_id = serializers.IntegerField()
-#     executor = UserSerializer(read_only=True)
-#     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+#     block_id = serializers.IntegerField()
+#     executor_id = serializers.IntegerField()
+#     creator_id = serializers.IntegerField()
 #
-#     def validate_priority(self, value):
-#         if int(value) > 100 or int(value) < 1:
-#             raise serializers.ValidationError('Priority field must be in range 1-100')
-#         return value
 #
 #     def create(self, validated_data):
 #         task = Task.objects.create(**validated_data)
@@ -79,11 +83,11 @@ class BlockSerializer(serializers.ModelSerializer):
 #
 #     def update(self, instance, validated_data):
 #         instance.name = validated_data.get('name', instance.name)
-#         instance.status = validated_data.get('status', instance.name)
-#         instance.project_id = validated_data.get('project_id', instance.name)
+#         instance.block_id = validated_data.get('block_id', instance.block_id)
+#         instance.executor_id = validated_data.get('executor_id', instance.executor_id)
+#         instance.creator_id = validated_data.get('creator_id', instance.creator_id)
 #         instance.save()
 #         return instance
-
 
 class TaskShortSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
@@ -92,10 +96,29 @@ class TaskShortSerializer(serializers.ModelSerializer):
         model = Task
         fields = ('id', 'name', 'executor', 'creator', 'block')
 
-    def validate_priority(self, value):
-        if int(value) > 100 or int(value) < 1:
-            raise serializers.ValidationError('Priority field must be in range 1-100')
-        return value
+
+# class TaskFullSerializer(TaskShortSerializer):
+#     priority = serializers.IntegerField()
+#     description = serializers.CharField()
+#     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+#
+#     def validate_priority(self, value):
+#         if int(value) > 100 or int(value) < 1:
+#             raise serializers.ValidationError('Priority field must be in range 1-100')
+#         return value
+#
+#     def update(self, instance, validated_data):
+#         instance.name = validated_data.get('name', instance.name)
+#         instance.block_id = validated_data.get('block_id', instance.block_id)
+#         instance.description = validated_data.get('description', instance.description)
+#         instance.priority = validated_data.get('priority', instance.priority)
+#         instance.save()
+#         return instance
+#
+#     def validate_priority(self, value):
+#         if int(value) > 100 or int(value) < 1:
+#             raise serializers.ValidationError('Priority field must be in range 1-100')
+#         return value
 
 
 class TaskFullSerializer(TaskShortSerializer):
@@ -104,21 +127,59 @@ class TaskFullSerializer(TaskShortSerializer):
     class Meta(TaskShortSerializer.Meta):
         fields = TaskShortSerializer.Meta.fields + ('priority', 'description',)
 
+    def validate_priority(self, value):
+        if int(value) > 100 or int(value) < 1:
+            raise serializers.ValidationError('Priority field must be in range 1-100')
+        return value
 
-class DocumentSerializer(serializers.ModelSerializer):
+    def validate_description(self, value):
+        if len(value) >= 200 or len(value) <= 10:
+            raise serializers.ValidationError('Description field must be in range 10-200 symbols')
+        return value
+
+
+class BlockNestedSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    tasks = TaskFullSerializer(many=True)
 
     class Meta:
-        model = TaskDocument
+        model = Block
         fields = '__all__'
 
+    def create(self, validated_data):
+        tasks = validated_data.pop('tasks')
+        block = Block.objects.create(**validated_data)
 
-class CommentSerializer(serializers.ModelSerializer):
+        for task in tasks:
+            task, created = task.objects.get_or_create(name=task['name'], description=task['description'],
+                                                       block=block, priority=task['priority'],
+                                                       creator=task['creator'], executor=['executor'])
+        return block
+
+
+class SubmitionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
+    text = serializers.CharField()
     created_at = serializers.DateTimeField(read_only=True)
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
-        model = TaskComment
+        model = TaskSubmition
         fields = '__all__'
+
+    def validate_text(self, value):
+        if len(value) <= 10:
+            raise serializers.ValidationError('Text field must contain more than 10 symbols')
+        return value
+
+
+class DocumentSerializer(SubmitionSerializer):
+    class Meta(SubmitionSerializer.Meta):
+        model = TaskDocument
+        fields = TaskShortSerializer.Meta.fields + ('document', 'task')
+
+
+class CommentSerializer(SubmitionSerializer):
+    class Meta(SubmitionSerializer.Meta):
+        model = TaskComment
+        fields = TaskShortSerializer.Meta.fields + ('task',)

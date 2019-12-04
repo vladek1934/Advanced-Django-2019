@@ -21,6 +21,13 @@ def user_created(sender, instance, created, **kwargs):
         print(instance)
 
 
+@receiver(post_save, sender=TaskDocument)
+def document_created(sender, instance, created, **kwargs):
+    if created:
+        actions_logger.info(f"{instance.document} created by {instance.creator} !\n")
+        print(instance)
+
+
 @receiver(post_save, sender=Project)
 def project_created(sender, instance, created, **kwargs):
     if created:
@@ -30,17 +37,6 @@ def project_created(sender, instance, created, **kwargs):
         Block.objects.create(name='Done', type=STATUS_DONE, project=instance)
         print(instance)
 
-
-# @receiver(pre_delete, sender=Task)
-# def task_deleted(sender, instance, **kwargs):
-#     print('started deleting docs')
-#     print(instance.documents)
-#     print(instance.documents.count())
-#     if instance.documents.count() > 0:
-#         print('started deleting many docs')
-#         for i in instance.documents:
-#             task_delete_path(document=i)
-#             print('deleted' + i)
 
 @receiver(post_delete, sender=TaskDocument)
 def document_deleted(sender, instance, **kwargs):
