@@ -1,4 +1,4 @@
-# DRF-based jira system
+# DRF-based Jira system
 
 This software is provided as is, under a License of its creators.
 
@@ -18,5 +18,5 @@ For example, you can remove a few displayed fields if you deem that needed. The 
 Views package:
 Responsible for all of the functions/views which the urls.py uses. Importing is performed by using an init.py which initializes all the views. Has both of the Api views, and viewsets split for the better readability.
 
-##Further help
+## Further help
 Additional information can be acquired by running the server and opening a localhost:8000/api/help url in the browser. But before doing this, you have to login with a django superuser in the :8000/admin panel
