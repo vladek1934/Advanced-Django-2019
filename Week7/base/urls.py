@@ -37,7 +37,7 @@ router.register('projects', ProjectViewSet, base_name='projects')
 router.register('project_members', ProjectMemberViewSet, base_name='project_members')
 router.register('blocks', BlockViewSet, base_name='blocks')
 router.register('tasks', TaskViewSet, base_name='tasks')
-router.register('documents', DocumentViewSet, base_name='documents')
+# router.register('documents', DocumentViewSet, base_name='documents')
 router.register('comments', CommentViewSet, base_name='comments')
 
 urlpatterns += router.urls

@@ -24,7 +24,7 @@ def user_created(sender, instance, created, **kwargs):
 @receiver(post_save, sender=TaskDocument)
 def document_created(sender, instance, created, **kwargs):
     if created:
-        actions_logger.info(f"{instance.document} created by {instance.creator} !\n")
+        actions_logger.info(f"{instance.document.name} created by {instance.creator} !\n")
         print(instance)
 
 

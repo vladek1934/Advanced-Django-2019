@@ -135,7 +135,7 @@ class DateManager(models.Manager):
         return super().get_queryset().order_by('-created_at')
 
 
-class TaskSubmition(models.Model):
+class TaskSubmission(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     timeOrder = DateManager()
@@ -147,7 +147,7 @@ class TaskSubmition(models.Model):
         return f'{self.text}: {self.created_at}'
 
 
-class TaskDocument(TaskSubmition):
+class TaskDocument(TaskSubmission):
     document = models.FileField(upload_to=task_document_path, validators=[validate_file_size, validate_extension])
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="documents")
     creator = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="documents")
@@ -156,7 +156,7 @@ class TaskDocument(TaskSubmition):
         return self.document.name + " added by " + str(self.creator.full_name)
 
 
-class TaskComment(TaskSubmition):
+class TaskComment(TaskSubmission):
     creator = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name="comments")
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="comments")
 

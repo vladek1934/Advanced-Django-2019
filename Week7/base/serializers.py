@@ -153,7 +153,7 @@ class BlockNestedSerializer(serializers.ModelSerializer):
         for task in tasks:
             task, created = task.objects.get_or_create(name=task['name'], description=task['description'],
                                                        block=block, priority=task['priority'],
-                                                       creator=task['creator'], executor=['executor'])
+                                                       creator=task['creator'], executor=task['executor'])
         return block
 
 
@@ -164,8 +164,8 @@ class SubmitionSerializer(serializers.ModelSerializer):
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
-        model = TaskSubmition
-        fields = '__all__'
+        model = TaskSubmission
+        fields = ('id', 'text', 'created_at', 'creator')
 
     def validate_text(self, value):
         if len(value) <= 10:
@@ -176,10 +176,10 @@ class SubmitionSerializer(serializers.ModelSerializer):
 class DocumentSerializer(SubmitionSerializer):
     class Meta(SubmitionSerializer.Meta):
         model = TaskDocument
-        fields = TaskShortSerializer.Meta.fields + ('document', 'task')
+        fields = SubmitionSerializer.Meta.fields + ('document', 'task')
 
 
 class CommentSerializer(SubmitionSerializer):
     class Meta(SubmitionSerializer.Meta):
         model = TaskComment
-        fields = TaskShortSerializer.Meta.fields + ('task',)
+        fields = SubmitionSerializer.Meta.fields + ('task',)
